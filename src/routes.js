@@ -30,7 +30,7 @@ router.get("/view-html", async (req, res) => {
       timeout: 20000,
     });
 
-    res.set("Content-Type", "text/html");
+    res.set("Content-Type", "text/plain; charset=utf-8");
     res.send(response.data);
   } catch (err) {
     res.json({ error: err.message });
