@@ -16,7 +16,11 @@ router.post("/metadata", async (req, res) => {
 });
 
 router.get("/view-html", async (req, res) => {
-  const { url } = req.body;
+  const { url } = req.query;
+
+  if (!url) {
+    return res.status(400).json({ error: "URL is required" });
+  }
 
   try {
     const response = await axios.get(url, {
