@@ -1,10 +1,11 @@
 import express from "express";
 import axios from "axios";
 import { extractMetadata } from "./scraper.js";
+import { JSDOM } from "jsdom";
 
 const router = express.Router();
 
-router.post("/metadata", async (req, res) => {
+router.get("/metadata", async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
@@ -25,15 +26,20 @@ router.get("/view-html", async (req, res) => {
   try {
     const response = await axios.get(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 ... Chrome/120",
+        "User-Agent": "Mozilla/5.0",
+        Accept: "text/html",
       },
       timeout: 20000,
     });
 
+    const dom = new JSDOM(response.data);
+    dom.window.document.querySelectorAll("script").forEach((s) => s.remove());
+    const prettyHtml = dom.window.document.documentElement.outerHTML;
+
     res.set("Content-Type", "text/plain; charset=utf-8");
-    res.send(response.data);
+    res.send(prettyHtml);
   } catch (err) {
-    res.json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
