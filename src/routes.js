@@ -1,7 +1,6 @@
 import express from "express";
 import axios from "axios";
 import { extractMetadata } from "./scraper.js";
-import { JSDOM } from "jsdom";
 
 const router = express.Router();
 
@@ -16,6 +15,7 @@ router.get("/metadata", async (req, res) => {
   res.json(result);
 });
 
+import { JSDOM } from "jsdom";
 router.get("/view-html", async (req, res) => {
   const { url } = req.query;
 
